@@ -83,6 +83,7 @@ class _TrainingCalibrationScreenState extends State<TrainingCalibrationScreen>
     }
 
     _gazeSubscription = _eventChannel.receiveBroadcastStream().listen((event) {
+      debugPrint('DEBUG: Gaze event received: $event, phase: $_phase');
       if (event is Map) {
         final x = (event['x'] as num).toDouble().clamp(0.0, 1.0);
         final y = (event['y'] as num).toDouble().clamp(0.0, 1.0);
@@ -101,6 +102,7 @@ class _TrainingCalibrationScreenState extends State<TrainingCalibrationScreen>
           setState(() {
             _currentSamples.add(gaze);
           });
+          debugPrint('DEBUG: Sample added, total: ${_currentSamples.length}');
 
           // Haptic feedback every 10 samples
           if (_currentSamples.length % 10 == 0) {
@@ -108,7 +110,7 @@ class _TrainingCalibrationScreenState extends State<TrainingCalibrationScreen>
           }
         }
       }
-    }, onError: (e) => debugPrint('Gaze stream error: $e'));
+    }, onError: (e) => debugPrint('DEBUG: Gaze stream error: $e'));
 
     // Camera warmup
     await Future.delayed(const Duration(seconds: 3));
@@ -123,6 +125,7 @@ class _TrainingCalibrationScreenState extends State<TrainingCalibrationScreen>
   }
 
   void _startNextPoint() {
+    debugPrint('DEBUG: _startNextPoint called, currentPoint: $_currentPoint');
     if (_currentPoint >= _calibrationPoints.length) {
       _finalizeCalibration();
       return;
@@ -133,6 +136,7 @@ class _TrainingCalibrationScreenState extends State<TrainingCalibrationScreen>
       _countdown = 3;
       _currentSamples.clear();
     });
+    debugPrint('DEBUG: Phase set to countdown');
 
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted) {
