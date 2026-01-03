@@ -53,8 +53,8 @@ class GazeEngine(
         private const val NOSE_TIP = 1
         private const val FACE_CENTER = 168
         
-        // HEAD-FIRST TRACKING
-        private const val HEAD_POSE_WEIGHT = 0.85f
+        // HEAD vs IRIS BALANCE (reduced for better iris tracking)
+        private const val HEAD_POSE_WEIGHT = 0.5f  // 50% head, 50% iris (was 85%)
         
         // Fixation detection thresholds
         private const val FIXATION_THRESHOLD = 0.015f  // Max movement to be considered fixation
@@ -195,8 +195,9 @@ class GazeEngine(
             var irisGazeX = (leftGazeX + rightGazeX) / 2.0
             var irisGazeY = (leftGazeY + rightGazeY) / 2.0
             
-            // Mirror correction for front camera
+            // Mirror correction for front camera (both axes)
             irisGazeX = 1.0 - irisGazeX
+            irisGazeY = 1.0 - irisGazeY  // Also invert Y for correct mapping
             
             // Head pose (face center position)
             val faceCenter = face[FACE_CENTER]
