@@ -170,7 +170,11 @@ class _TrainingCalibrationScreenState extends State<TrainingCalibrationScreen>
   }
 
   void _saveSamples() async {
-    if (_currentSamples.length < 5) {
+    debugPrint(
+      'DEBUG: _saveSamples called, samples: ${_currentSamples.length}',
+    );
+    // Lowered from 5 to 3 for robustness when face detection is intermittent
+    if (_currentSamples.length < 3) {
       _retryCount++;
 
       // Error haptic

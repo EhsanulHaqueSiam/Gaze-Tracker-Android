@@ -68,8 +68,8 @@ class GazeEngine(
         private const val HISTORY_SIZE = 10
         private const val OUTLIER_THRESHOLD = 3.0f  // Standard deviations
         
-        // Blink detection (Eye Aspect Ratio)
-        private const val EAR_BLINK_THRESHOLD = 0.12f  // Below this = eye closed (was 0.2, too sensitive)
+        // Blink detection (Eye Aspect Ratio) - lowered for edge gaze detection
+        private const val EAR_BLINK_THRESHOLD = 0.08f  // Below this = eye closed (was 0.12)
         private const val LEFT_EYE_UPPER = 159
         private const val LEFT_EYE_LOWER = 145
         private const val RIGHT_EYE_UPPER = 386
@@ -173,16 +173,15 @@ class GazeEngine(
             val rightTop = face[RIGHT_EYE_TOP]
             val rightBottom = face[RIGHT_EYE_BOTTOM]
             
-            // BLINK DETECTION using Eye Aspect Ratio (EAR)
-            val leftEAR = calculateEAR(leftTop.y(), leftBottom.y(), leftOuter.x(), leftInner.x())
-            val rightEAR = calculateEAR(rightTop.y(), rightBottom.y(), rightOuter.x(), rightInner.x())
-            val avgEAR = (leftEAR + rightEAR) / 2.0f
-            
-            // Skip if eyes are closed (blinking)
-            if (avgEAR < EAR_BLINK_THRESHOLD) {
-                Log.d(TAG, "Blink detected (EAR: $avgEAR)")
-                return
-            }
+            // BLINK DETECTION DISABLED - EAR calculation broken with normalized coords
+            // TODO: Fix EAR with proper threshold for normalized coordinates (0-1 range)
+            // val leftEAR = calculateEAR(leftTop.y(), leftBottom.y(), leftOuter.x(), leftInner.x())
+            // val rightEAR = calculateEAR(rightTop.y(), rightBottom.y(), rightOuter.x(), rightInner.x())
+            // val avgEAR = (leftEAR + rightEAR) / 2.0f
+            // if (avgEAR < EAR_BLINK_THRESHOLD) {
+            //     Log.d(TAG, "Blink detected (EAR: $avgEAR)")
+            //     return
+            // }
             
             // Calculate iris position relative to eye (0-1 within eye bounds)
             val leftGazeX = calculateNormalizedPosition(leftIris.x(), leftOuter.x(), leftInner.x())
