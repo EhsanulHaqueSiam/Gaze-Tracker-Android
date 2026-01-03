@@ -196,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
             TextButton.icon(
               onPressed: () {
                 const platform = MethodChannel(
-                  'com.antigravity.eye_tracker/camera',
+                  'com.antigravity.eye_tracker/settings', // Fixed: was 'camera'
                 );
                 platform.invokeMethod('openAccessibilitySettings');
               },
